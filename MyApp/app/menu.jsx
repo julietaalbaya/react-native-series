@@ -11,18 +11,30 @@ export default function MenuScreen() {
     const styles = createStyles(theme, colorScheme);
     const Container = Platform.OS === 'web' ? ScrollView : SafeAreaView;
 
+    const separatorComp = <View style={styles.separator} />;
+
+    //const headerComp = <Text>Top of List</Text>
+    const footerComp = <Text style={{ color: theme.text }}>End of Menu</Text>
+
     return (
         <Container>
             <FlatList
                 data={MENU_ITEMS}
                 keyExtractor={(item) => item.id.toString()}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.contentContainer}
+                ItemSeparatorComponent={separatorComp}
+                //ListHeaderComponent={headerComp}
+                ListFooterComponent={footerComp}
+                ListFooterComponentStyle={styles.footerComp}
+                ListEmptyComponent={<Text>No items</Text>}
                 renderItem={({ item, index }) => (
-                    <View style={styles.itemContainer}>
-                        <View>
+                    <View style={styles.row}>
+                        <View style={styles.menuTextRow}>
                             <Text>{item.title}</Text>
-                            <Text>{item.description}</Text>
+                            <Text styles={[styles.menuItemTitle, styles.menuItemText]}>{item.description}</Text>
                         </View>
-                        <Image source={MENU_IMAGES[index]} style={styles.itemImage} />
+                        <Image source={MENU_IMAGES[index]} style={styles.menuImage} />
                     </View>
                 )}
             />
@@ -30,5 +42,54 @@ export default function MenuScreen() {
 }
 
 function createStyles(theme, colorScheme) {
-    return StyleSheet.create({ });
+    return StyleSheet.create({
+        contentContainer: {
+            paddingTop: 10,
+            paddingBottom: 20,
+            paddingHorizontal: 16,
+            backgroundColor: theme.background,
+        },
+        separator: {
+            height: 1,
+            backgroundColor: colorScheme === 'dark' ? 'papayawhip' : "#000",
+            width: '50%',
+            maxWidth: 300,
+            marginHorizontal: 'auto',
+            marginVertical: 10,
+        },
+        footerComp: {
+            marginHorizontal: 'auto',
+        },
+        row: {
+            flexDirection: 'row',
+            width: '100%',
+            maxWidth: 600,
+            height: 100,
+            marginBottom: 10,
+            borderStyle: 'solid',
+            borderColor: colorScheme === 'dark' ? 'papayawhip' : "#000",
+            borderWidth: 1,
+            borderRadius: 20,
+            overflow: 'hidden',
+            marginHorizontal: 'auto',
+        },
+        menuTextRow: {
+            width: '65%',
+            paddingTop: 10,
+            paddingLeft: 10,
+            paddingRight: 5,
+            flexGrow: 1,
+        },
+        menuItemTitle: {
+            fontSize: 18,
+            textDecorationLine: 'underline',
+        },
+        menuItemText: {
+            color: theme.text,
+        },
+        menuImage: {
+            width: 100,
+            height: 100,
+        },
+    });
 }
